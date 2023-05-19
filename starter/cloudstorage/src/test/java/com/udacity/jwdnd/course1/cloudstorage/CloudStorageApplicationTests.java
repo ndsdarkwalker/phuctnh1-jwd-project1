@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import java.io.File;
+import java.util.Objects;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
@@ -197,6 +199,58 @@ class CloudStorageApplicationTests {
             System.out.println("Large File upload failed");
         }
         Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
+    }
 
+    @Test
+    public void verifiedAccessHomePageTest() {
+        WebDriver driver = new ChromeDriver();
+        driver.get("http://localhost:" + this.port + "/home");
+        boolean isLoginPageDisplayed = driver.findElement(By.id("inputUsername")).isDisplayed();
+        if (isLoginPageDisplayed) {
+            System.out.println("Test Passed: Home page is not accessible without logging in");
+        } else {
+            System.out.println("Test Failed: Home page is accessible without logging in");
+        }
+        driver.quit();
+    }
+
+    @Test
+    public void signUpLoginTest() {
+        WebDriver driver = new ChromeDriver();
+        driver.get("http://localhost:" + this.port + "/signup");
+        // Fill in the sign-up form with user details
+        driver.findElement(By.id("inputFirstName")).sendKeys("firstName");
+        driver.findElement(By.id("inputLastName")).sendKeys("lastName");
+        driver.findElement(By.id("inputUsername")).sendKeys("abc");
+        driver.findElement(By.id("inputPassword")).sendKeys("password");
+        // Submit the form to create the new user
+        driver.findElement(By.id("buttonSignUp")).click();
+
+        // Log in the new user
+        driver.findElement(By.id("inputUsername")).sendKeys("abc");
+        driver.findElement(By.id("inputPassword")).sendKeys("password");
+        driver.findElement(By.id("login-button")).click();
+
+        boolean isHomePageDisplayedLogout = driver.findElement(By.id("logoutDiv")).isDisplayed();
+        boolean isHomePageDisplayedContent = driver.findElement(By.id("contentDiv")).isDisplayed();
+        if (isHomePageDisplayedLogout && isHomePageDisplayedContent) {
+            System.out.println("Test Passed: New user can access the home page");
+        } else {
+            System.out.println("Test Failed: New user cannot access the home page");
+        }
+
+        WebElement logoutButton = driver.findElement(By.cssSelector("#logoutDiv form button[type='submit']"));
+        logoutButton.click();
+
+        // Verify that the home page is no longer accessible
+        boolean isLoginPageDisplayed = driver.findElement(By.id("login-button")).isDisplayed();
+        if (isLoginPageDisplayed) {
+            System.out.println("Test Passed: Home page is not accessible after logging out");
+        } else {
+            System.out.println("Test Failed: Home page is still accessible after logging out");
+        }
+
+        // Close the browser
+        driver.quit();
     }
 }
