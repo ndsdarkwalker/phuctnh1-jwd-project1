@@ -253,4 +253,120 @@ class CloudStorageApplicationTests {
         // Close the browser
         driver.quit();
     }
+
+    @Test
+    public void notesTest() throws InterruptedException {
+        WebDriver driver = new ChromeDriver();
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+
+        driver.get("http://localhost:" + this.port + "/signup");
+        // Fill in the sign-up form with user details
+        driver.findElement(By.id("inputFirstName")).sendKeys("firstName");
+        driver.findElement(By.id("inputLastName")).sendKeys("lastName");
+        driver.findElement(By.id("inputUsername")).sendKeys("abcd");
+        driver.findElement(By.id("inputPassword")).sendKeys("password");
+        // Submit the form to create the new user
+        driver.findElement(By.id("buttonSignUp")).click();
+
+        // Log in the new user
+        driver.findElement(By.id("inputUsername")).sendKeys("abcd");
+        driver.findElement(By.id("inputPassword")).sendKeys("password");
+        driver.findElement(By.id("login-button")).click();
+
+        driver.findElement(By.id("nav-notes-tab")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonAddNote")));
+        driver.findElement(By.id("buttonAddNote")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-title")));
+        driver.findElement(By.id("note-title")).sendKeys("abc");
+        driver.findElement(By.id("note-description")).sendKeys("abc");
+        driver.findElement(By.id("buttonNoteSubmit")).click();
+        driver.findElement(By.id("nav-notes-tab")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonEditNote1")));
+        boolean isNoteEdited = driver.findElement(By.id("buttonEditNote1")).isDisplayed();
+        if (isNoteEdited) {
+            System.out.println("Test Passed: Created note successful");
+        } else {
+            System.out.println("Test Failed: Error while creating note");
+        }
+
+
+        driver.findElement(By.id("nav-notes-tab")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonEditNote1")));
+        driver.findElement(By.id("buttonEditNote1")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-title")));
+        driver.findElement(By.id("note-title")).sendKeys("abcd");
+        driver.findElement(By.id("note-description")).sendKeys("abcd");
+        driver.findElement(By.id("buttonNoteSubmit")).click();
+
+        driver.findElement(By.id("nav-notes-tab")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.id("deleteNote1")).click();
+        boolean isNoteDeleted = driver.findElements(By.xpath("//td[contains(text(),'abcabcd')]")).isEmpty();
+        if (isNoteDeleted) {
+            System.out.println("Test Passed: Deleted");
+        } else {
+            System.out.println("Test Failed: Error while deleting note");
+        }
+        // Close the browser
+        driver.quit();
+    }
+
+    @Test
+    public void credentialsTest() throws InterruptedException {
+        WebDriver driver = new ChromeDriver();
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+
+        driver.get("http://localhost:" + this.port + "/signup");
+        // Fill in the sign-up form with user details
+        driver.findElement(By.id("inputFirstName")).sendKeys("firstName");
+        driver.findElement(By.id("inputLastName")).sendKeys("lastName");
+        driver.findElement(By.id("inputUsername")).sendKeys("abcde");
+        driver.findElement(By.id("inputPassword")).sendKeys("password");
+        // Submit the form to create the new user
+        driver.findElement(By.id("buttonSignUp")).click();
+
+        // Log in the new user
+        driver.findElement(By.id("inputUsername")).sendKeys("abcde");
+        driver.findElement(By.id("inputPassword")).sendKeys("password");
+        driver.findElement(By.id("login-button")).click();
+
+        driver.findElement(By.id("nav-credentials-tab")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonAddCredential")));
+        driver.findElement(By.id("buttonAddCredential")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+        driver.findElement(By.id("credential-url")).sendKeys("qwer");
+        driver.findElement(By.id("credential-username")).sendKeys("qwer");
+        driver.findElement(By.id("credential-password")).sendKeys("qwer");
+        driver.findElement(By.id("buttonCredentialSubmit")).click();
+        driver.findElement(By.id("nav-credentials-tab")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonEditCredential1")));
+        boolean isCredentialsEdited = driver.findElement(By.id("buttonEditCredential1")).isDisplayed();
+        if (isCredentialsEdited) {
+            System.out.println("Test Passed: Created credential successful");
+        } else {
+            System.out.println("Test Failed: Error while creating credential");
+        }
+
+
+        driver.findElement(By.id("nav-credentials-tab")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonEditCredential1")));
+        driver.findElement(By.id("buttonEditCredential1")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+        driver.findElement(By.id("credential-url")).sendKeys("abcd");
+        driver.findElement(By.id("credential-username")).sendKeys("abcd");
+        driver.findElement(By.id("credential-password")).sendKeys("abcd");
+        driver.findElement(By.id("buttonCredentialSubmit")).click();
+
+        driver.findElement(By.id("nav-credentials-tab")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.id("deleteCredential1")).click();
+        boolean isCredentialsDeleted = driver.findElements(By.xpath("//td[contains(text(),'abcabcd')]")).isEmpty();
+        if (isCredentialsDeleted) {
+            System.out.println("Test Passed: Deleted");
+        } else {
+            System.out.println("Test Failed: Error while deleting note");
+        }
+        // Close the browser
+        driver.quit();
+    }
 }
